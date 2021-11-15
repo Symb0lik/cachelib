@@ -3,9 +3,12 @@
 #
 cmake_minimum_required (VERSION 3.8)
 
+set(VCPKG_TARGET_TRIPLET "x64-windows-static")
 project ("cachelib")
 
+
 # Add source to this project's executable.
-add_executable (cachelib "cachelib.cpp" "cachelib.h")
+add_subdirectory("cachetool")
+add_subdirectory("lib")
 
 # TODO: Add tests and install targets if needed.
