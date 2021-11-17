@@ -9,6 +9,7 @@
 
 class index
 {
+public:
 	struct index_entry
 	{
 		const unsigned int id;
@@ -16,8 +17,7 @@ class index
 		const unsigned int length;
 	};
 
-public:
-	index(int id, const std::filesystem::path& p);
+	index(int id, std::filesystem::path p);
 	std::vector<index_entry> get_entries();
 	std::optional<index_entry> read_entry(const unsigned int id);
 	[[nodiscard("Entry count is useless if discarded")]] unsigned long long get_entry_count() const;
@@ -25,8 +25,8 @@ public:
 private:
 	const int ENTRY_SIZE = 6;
 
-	std::filesystem::path const &m_filepath_;
-	std::ifstream m_filestream_;
+	std::filesystem::path m_filepath;
+	std::ifstream m_filestream;
 
 
 };
