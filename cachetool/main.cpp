@@ -7,29 +7,30 @@
 #include "archive.h"
 #include "metadata.h"
 #include "index.h"
+#include "cachestore.h"
+#include "index_file.h"
 
 
 int main()
 {
 	const std::filesystem::path cache_dir = R"(C:\Users\aaron\jagexcache\oldschool\LIVE)";
 
-	for(index idx(255, cache_dir / "main_file_cache.idx255"); const auto &entry: idx.get_entries())
+	cachestore c(cache_dir);
+	auto files = c.read_index(2, 10);
+
+	for(const auto& file : files.value()) 
 	{
-		datafile d(cache_dir / "main_file_cache.dat2");
-		auto entry_buf = d.read_entry(entry);
-		archive c(entry_buf);
+		auto id = file.first;
+		auto metadata = file.second.first;
+		const auto& data = file.second.second;
 
-		auto meta = c.get_metadata();
-
-		std::cout << entry.id << std::endl;
-		auto data= c.decompress();
-		metadata md(data);
-		for(const auto& aentry : md.get_entries())
+		std::cout << std::format("{} : {}\n\t", id, metadata.id);
+		for (const auto& d : data)
 		{
-			std::cout << std::format("id: {} named: {} crc: {} revision: {} files: {}\n", aentry.id, aentry.name_hash, aentry.crc, aentry.revision, aentry.file_count);
+			std::cout << d;
 		}
 
+		std::cout << std::endl;
 	}
-
 	return 0;
 }

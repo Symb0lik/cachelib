@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <vector>
 
+#include "archive.h"
 #include "index.h"
 
 class datafile
@@ -11,6 +12,7 @@ class datafile
 public:
 	datafile(std::filesystem::path p);
 	std::vector<char> read_entry(const index::index_entry& entry);
+	std::vector<char> read_decompressed(const index::index_entry& entry);
 
 private:
 	const unsigned int SECTOR_SIZE = 520;

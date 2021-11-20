@@ -5,16 +5,17 @@ index::index(int id, std::filesystem::path p) : m_filepath(p)
 	m_filestream = std::ifstream(p, std::ios_base::in | std::ios_base::binary);
 }
 
-std::vector<index::index_entry> index::get_entries()
+std::optional<index::index_entry> index::get_entry(const unsigned id)
 {
-	std::vector<index_entry> entries;
-	for (unsigned int i = 0; i < get_entry_count(); i++)
+	if (id > get_entry_count())
 	{
-		if (auto entry = read_entry(i); entry.has_value())
-			entries.emplace_back(entry.value());
+		return std::nullopt;
 	}
 
-	return entries;
+	if (const auto entry = m_index_entries.find(id); entry != m_index_entries.end())
+		return entry->second;
+
+	return read_entry(id);
 }
 
 std::optional<index::index_entry> index::read_entry(const unsigned int id)
@@ -36,7 +37,9 @@ std::optional<index::index_entry> index::read_entry(const unsigned int id)
 	if (length <= 0 || sector <= 0)
 		return std::nullopt;
 
-	return std::optional<index_entry>{{id, sector, length}};
+	index_entry entry(id, sector, length);
+	m_index_entries.emplace(id, entry);
+	return std::optional<index_entry>{entry};
 }
 
 

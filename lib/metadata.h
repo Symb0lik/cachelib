@@ -3,6 +3,7 @@
 #include <vector>
 #include <iostream>
 #include <format>
+#include <map>
 class metadata
 {
 public:
@@ -23,7 +24,7 @@ public:
 	};
 
 	metadata(const std::vector<char>& buf);
-	std::vector<archive_entry> get_entries();
+	std::map<const short, archive_entry> get_entries() const;
 private:
 	const std::vector<char>& m_buf;
 	bool m_named = false;
@@ -31,7 +32,7 @@ private:
 	unsigned int m_protocol = 0;
 	unsigned int m_revision = 0;
 	unsigned int m_archives_count = 0;
-	std::vector<archive_entry> m_entries;
+	std::map<const short, archive_entry> m_entries;
 
 	void read_entries();
 

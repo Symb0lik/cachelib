@@ -120,6 +120,17 @@ std::vector<char> datafile::read_entry(const index::index_entry& entry)
 	return entry_buffer;
 }
 
+std::vector<char> datafile::read_decompressed(const index::index_entry& entry)
+{
+	const auto compressed_data = read_entry(entry);
+	if (compressed_data.empty())
+		return {};
+
+	archive archive(compressed_data);
+	auto decompressed_data = archive.decompress();
+	return decompressed_data;
+}
+
 unsigned long long datafile::sector_count() const
 {
 	return std::filesystem::file_size(m_filename) / SECTOR_SIZE;

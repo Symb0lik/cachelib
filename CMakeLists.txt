@@ -10,6 +10,5 @@ project ("cachelib")
 # Add source to this project's executable.
 add_subdirectory("cachetool")
 add_subdirectory("lib")
-add_subdirectory("test")
 
 # TODO: Add tests and install targets if needed.

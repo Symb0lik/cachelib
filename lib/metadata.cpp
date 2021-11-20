@@ -12,7 +12,7 @@ metadata::metadata(const std::vector<char>& buf) : m_buf(buf), m_read(0)
 	read_entries();
 }
 
-std::vector<metadata::archive_entry> metadata::get_entries()
+std::map<const short, metadata::archive_entry> metadata::get_entries() const
 {
 	return m_entries;
 }
@@ -35,9 +35,11 @@ void metadata::read_entries()
 	 * The following could be done in a single loop, but doing it this way matches the
 	 * way the file is laid out on disk more closely. 
 	 */
+
+	unsigned short last_archive_id = 0;
 	for(unsigned i = 0; i < m_archives_count; i++)
 	{
-		const unsigned short id = read_short16();
+		const unsigned short id = last_archive_id += read_short16();
 		temp_entries[i].id = id;
 	}
 
@@ -93,7 +95,7 @@ void metadata::read_entries()
 	for (const auto& entry : temp_entries)
 	{
 		archive_entry new_entry = {entry.id, entry.named_hash, entry.crc, entry.revision, entry.file_count, entry.file_entries};
-		m_entries.push_back(new_entry);
+		m_entries.emplace(entry.id, new_entry);
 	}
 }
 

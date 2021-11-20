@@ -103,9 +103,9 @@ std::vector<char> archive::decompress() const
 	{
 		const auto compression_stream = std::make_unique<z_stream>();
 
-		// see comments above for descriptions on this. we are skipping the gzip header (+19)
+		// see comments above for descriptions on this. we are skipping the gzip header (+20)
 		compression_stream->avail_in = static_cast<unsigned int>(m_buffer.size());
-		compression_stream->next_in = reinterpret_cast<unsigned char*>(const_cast<char*>(m_buffer.data())) + 19;
+		compression_stream->next_in = reinterpret_cast<unsigned char*>(const_cast<char*>(m_buffer.data()) + 19);
 		compression_stream->avail_out = static_cast<unsigned int>(decompressed_buffer.capacity());
 		compression_stream->next_out = reinterpret_cast<unsigned char*>(decompressed_buffer.data());
 
