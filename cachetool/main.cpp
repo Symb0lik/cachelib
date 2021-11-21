@@ -9,6 +9,7 @@
 #include "index.h"
 #include "cachestore.h"
 #include "index_file.h"
+#include "itemdefintion.h"
 
 
 int main()
@@ -25,12 +26,10 @@ int main()
 		const auto& data = file.second.second;
 
 		std::cout << std::format("{} : {}\n\t", id, metadata.id);
-		for (const auto& d : data)
-		{
-			std::cout << d;
-		}
 
-		std::cout << std::endl;
+		auto i = item_definition::parse(data);
+		std::cout << std::format("name: {} cost: {}\n", i.name, i.cost);
+
 	}
 	return 0;
 }
